@@ -38,19 +38,42 @@ client = InferenceClient()
 # Create a chat completion
 
 
-# Start a conversation loop
-print("\nType 'exit' to end the conversation.")
-conversation = []
+
+def chat_with_model(selected_model):
+    print("\nType 'exit' to end the conversation.")
+    conversation = []
+    while True:
+        user_message = input("You: ")
+        if user_message.strip().lower() == 'exit':
+            return
+        conversation.append({"role": "user", "content": user_message})
+        completion = client.chat.completions.create(
+            model=selected_model,
+            messages=conversation
+        )
+        response = completion.choices[0].message.content
+        print(f"AI: {response}\n")
+        conversation.append({"role": "assistant", "content": response})
+
 while True:
-    user_message = input("You: ")
-    if user_message.strip().lower() == 'exit':
-        print("Exiting conversation.")
+    chat_with_model(selected_model)
+    again = input("Would you like to chat with another AI? (y/n): ").strip().lower()
+    if again == 'y':
+        # Display model options again
+        print("\nSelect an AI model to use:")
+        for key, model in models.items():
+            print(f"{key}: {model}")
+        choice = input("Enter the number corresponding to your choice: ").strip()
+        if choice not in models:
+            print("Invalid choice. Exiting.")
+            break
+        selected_model = models[choice]
+        print(f"\nYou selected: {selected_model}")
+        download_choice = input("Do you want to download this model locally? (y/n): ").strip().lower()
+        if download_choice == 'y':
+            print(f"Downloading model '{selected_model}'... This may take a while.")
+            local_path = snapshot_download(repo_id=selected_model)
+            print(f"Model downloaded to: {local_path}\n")
+    else:
+        print("Exiting program.")
         break
-    conversation.append({"role": "user", "content": user_message})
-    completion = client.chat.completions.create(
-        model=selected_model,
-        messages=conversation
-    )
-    response = completion.choices[0].message.content
-    print(f"AI: {response}\n")
-    conversation.append({"role": "assistant", "content": response})
