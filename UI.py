@@ -37,7 +37,9 @@ def menu():
         case _:
             print("Invalid choice. Please enter a number between 1 and 4.\n\n\n\n")
 
-if __name__ == "__main__":
+def main():
     while True:
         menu()
-    
+
+if __name__ == "__main__":
+    main()
