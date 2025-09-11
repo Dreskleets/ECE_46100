@@ -110,7 +110,7 @@ def select_model():
 def get_inference_client():
     return InferenceClient()
 
-def main():
+def huggingface_main():
     client = get_inference_client()
     selected_model = select_model()
 
@@ -130,4 +130,4 @@ def main():
             break
 
 if __name__ == "__main__":
-    main()
+    huggingface_main()
