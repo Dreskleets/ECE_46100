@@ -1,4 +1,5 @@
 from huggingface import select_model, chat_with_model, get_inference_client
+import sqlite3, os, huggingface.py
 
 #UI Menu Layout
 
@@ -10,7 +11,12 @@ from huggingface import select_model, chat_with_model, get_inference_client
 #3.) Performance (Testing / Runtime)
 
 #Hugging Face Menu (2)
-client = get_inference_client()
-model = select_model()
-if model:
-    chat_with_model(model, client)
+def menu():
+    print(f"Welcome to the ACME AI Database and Chat System!\nWhat would you like to do today?\n\n")
+    print("1. Chat with models\n"
+        "2. View model reviews\n"
+        "3. View performance data\n"
+        "4. Exit")
+    
+    choice = input("Enter your choice (1-4): ")
+    
