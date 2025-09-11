@@ -36,16 +36,21 @@ if download_choice == 'y':
 client = InferenceClient()
 
 # Create a chat completion
-completion = client.chat.completions.create(
-    model=selected_model,
-    messages=[
-        {
-            "role": "user",
-            "content": "How many 'G's in 'huggingface'?"
-        }
-    ],
-)
 
-# Display response
-print("\nResponse from the model:")
-print(completion.choices[0].message.content)
+
+# Start a conversation loop
+print("\nType 'exit' to end the conversation.")
+conversation = []
+while True:
+    user_message = input("You: ")
+    if user_message.strip().lower() == 'exit':
+        print("Exiting conversation.")
+        break
+    conversation.append({"role": "user", "content": user_message})
+    completion = client.chat.completions.create(
+        model=selected_model,
+        messages=conversation
+    )
+    response = completion.choices[0].message.content
+    print(f"AI: {response}\n")
+    conversation.append({"role": "assistant", "content": response})
