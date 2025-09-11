@@ -1,4 +1,6 @@
 import os
+import time
+import sqlite3
 from huggingface_hub import InferenceClient, snapshot_download
 
 # List of available models
@@ -40,20 +42,79 @@ client = InferenceClient()
 
 
 def chat_with_model(selected_model):
+    total_time = 0.0
+    times_chatted = 0
     print("\nType 'exit' to end the conversation.")
     conversation = []
     while True:
         user_message = input("You: ")
         if user_message.strip().lower() == 'exit':
-            return
+            break
         conversation.append({"role": "user", "content": user_message})
+
+        #Starts timing for response time data
+        start_time = time.time()
+
         completion = client.chat.completions.create(
             model=selected_model,
             messages=conversation
         )
         response = completion.choices[0].message.content
+
+        #Ends timing for response time data
+        end_time = time.time()
+        response_time = end_time - start_time
+
+        total_time += response_time
+        times_chatted += 1
+
         print(f"AI: {response}\n")
         conversation.append({"role": "assistant", "content": response})
+    
+    # Calculate average response time
+    avg_run = total_time / times_chatted if times_chatted > 0 else 0
+
+    review_question = input("Would you like to leave a review for this model? (y/n): ")
+    if review_question.strip().lower() == 'y':
+        ratings = input("Please rate the model from 1 to 10: \n")
+        review = input("Please enter a review: \n")
+        print("Thank you for your review!\n")
+
+        conn = sqlite3.connect('review_data.db')
+        cursor = conn.cursor()
+
+        match choice:
+            case "1":
+                cursor.execute('''
+                    INSERT INTO Deepseek (ratings, review, avg_run)
+                    VALUES (?, ?, ?)
+                ''', (ratings, review, avg_run))
+
+                #close connection
+                conn.commit()
+                conn.close()
+                pass
+            case "2":
+                cursor.execute('''
+                    INSERT INTO MetaLlama (ratings, review, avg_run)
+                    VALUES (?, ?, ?)
+                ''', (ratings, review, avg_run))
+
+                #close connection
+                conn.commit()
+                conn.close()
+                pass
+            case "3":
+                cursor.execute('''
+                    INSERT INTO MistralAI (ratings, review, avg_run)
+                    VALUES (?, ?, ?)
+                ''', (ratings, review, avg_run))
+                #close connection
+                conn.commit()
+                conn.close()
+                pass
+        
+
 
 while True:
     chat_with_model(selected_model)
