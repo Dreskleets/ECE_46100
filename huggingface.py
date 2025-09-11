@@ -50,39 +50,45 @@ def chat_with_model(selected_model, client):
         conn = sqlite3.connect('review_data.db')
         cursor = conn.cursor()
 
+    else:
+        conn = sqlite3.connect('review_data.db')
+        cursor = conn.cursor()
+        ratings = None
+        review = "N/A"
 
-        # Inserts data into the database based on model selected
-        match selected_model:
-            case "deepseek-ai/DeepSeek-V3-0324":
-                cursor.execute('''
-                    INSERT INTO Deepseek (ratings, review, avg_run)
-                    VALUES (?, ?, ?)
-                ''', (ratings, review, avg_run))
-
-                #close connection
-                conn.commit()
-                conn.close()
-                pass
-            case "meta-llama/Meta-Llama-3-8B-Instruct":
-                cursor.execute('''
-                    INSERT INTO MetaLlama (ratings, review, avg_run)
-                    VALUES (?, ?, ?)
-                ''', (ratings, review, avg_run))
+    
+    # Inserts data into the database based on model selected
+    match selected_model:
+        case "deepseek-ai/DeepSeek-V3-0324":
+            cursor.execute('''
+                INSERT INTO Deepseek (ratings, review, avg_run)
+                VALUES (?, ?, ?)
+            ''', (ratings, review, avg_run))
 
                 #close connection
-                conn.commit()
-                conn.close()
-                pass
-            case "mistralai/Mistral-7B-Instruct-v0.2":
-                cursor.execute('''
-                    INSERT INTO MistralAI (ratings, review, avg_run)
-                    VALUES (?, ?, ?)
-                ''', (ratings, review, avg_run))
+            conn.commit()
+            conn.close()
+            pass
+        case "meta-llama/Meta-Llama-3-8B-Instruct":
+            cursor.execute('''
+                INSERT INTO MetaLlama (ratings, review, avg_run)
+                VALUES (?, ?, ?)
+            ''', (ratings, review, avg_run))
+
                 #close connection
-                conn.commit()
-                conn.close()
-                pass
-        
+            conn.commit()
+            conn.close()
+            pass
+        case "mistralai/Mistral-7B-Instruct-v0.2":
+            cursor.execute('''
+                INSERT INTO MistralAI (ratings, review, avg_run)
+                VALUES (?, ?, ?)
+            ''', (ratings, review, avg_run))
+
+                #close connection
+            conn.commit()
+            conn.close()
+            pass
 
 
 models = {
