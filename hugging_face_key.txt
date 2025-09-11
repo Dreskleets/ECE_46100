@@ -1,3 +1,0 @@
-Token for Hugging Face login in terminal:
-
-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
