@@ -13,15 +13,12 @@ def main_menu():
         case "1": 
             AI_name = "Deepseek"
             review_menu(AI_name)
-            pass
         case "2":
             AI_name = "MetaLlama"
             review_menu(AI_name)
-            pass
         case "3":
             AI_name = "MistralAI"
             review_menu(AI_name)
-            pass
         case "4":
             print("Exiting the program. Goodbye!")
             return(False)
@@ -33,15 +30,36 @@ def review_menu(AI_name):
     # This will act as a template to show reviews for each model
     # AI_name is used to access the correct database table
 
-    review_menu_exit = input("Press enter to return to menu")
-
-    if review_menu_exit:
-        return
+    conn = sqlite3.connect('review_data.db')
+    cursor = conn.cursor()
+    match AI_name:
+        case "Deepseek":
+            cursor.execute('SELECT * FROM Deepseek')
+            reviews = cursor.fetchall()
+            for review in reviews:
+                print(review)
+        case "MetaLlama":
+            cursor.execute('SELECT * FROM MetaLlama')
+            reviews = cursor.fetchall()
+            for review in reviews:
+                print(review)
+        case "MistralAI":
+            cursor.execute('SELECT * FROM MistralAI')
+            reviews = cursor.fetchall()
+            for review in reviews:
+                print(review)
+    conn.close()
+    input("Press enter to return to menu")
 
 
 
 exit = True
 
 def main():
-    while exit == True:
-        exit = main_menu()
+#Didnt know what this function was doing because it caused error
+#    while exit == True:
+#        exit = main_menu()
+
+#Takes you to the main_menu() if wanting options for multiple 
+#reviews need implementation later
+    main_menu()
