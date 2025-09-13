@@ -31,7 +31,7 @@
 
 #Use a net score to validate these metrics into a single metric.
 
-import UI, time
+import UI, time, sqlite3
 
 def admin_access():
     print("Welcome to the Admin Menu:")
@@ -90,6 +90,10 @@ def open_source_menu():
             return(True)    
         
 def open_source_review():
+    
+    conn = sqlite3.connect('review_data.db')
+    cursor = conn.cursor()
+    
     print("Welcome to the review menu!")
     ramp_up_time_metric = input("Please rate your overall experience from downloading the product to full usability (1-10):")
     rating_check(ramp_up_time_metric)
@@ -115,6 +119,12 @@ def open_source_review():
                      + (int(size_score_metric)) 
                      + (int(data_score_metric)) 
                      + (int(code_quality_metric))) / 6
+    cursor.execute('''
+                INSERT INTO NetScore (net_score, ramp_up_time_metric, bus_factor_metric, license_metric, size_score_metric, data_score_metric, code_quality_metric)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            ''', (net_score_avg, ramp_up_time_metric, bus_factor_metric, license_metric, size_score_metric, data_score_metric, code_quality_metric))
+    conn.commit()
+    conn.close()
     print("Your review has a net score of", net_score_avg)
     unhappy_metric = input("Would you like to keep this metric? (y/n):")
     match unhappy_metric:
@@ -152,7 +162,34 @@ def licenses_menu():
 def net_score_menu():
     #Similar to AI performance menu except with the average net score for each one
     #Delete function contents when create actual functions
-    return_to_admin_menu()
+    
+    conn = sqlite3.connect('review_data.db')
+    cursor = conn.cursor()
+    
+    cursor.execute("SELECT AVG(net_score) FROM NetScore")
+    net_score_avg = cursor.fetchone()[0]
+    cursor.execute("SELECT net_score FROM NetScore ORDER BY id DESC LIMIT 5")
+    last_5 = [row[0] for row in cursor.fetchall()]
+    
+    print("Net Score Statistics")
+    print("---------------------")
+    print("  Net Score Average")
+    print(f"{net_score_avg:.2f}")
+    print("  Last 5 Net Scores")
+    print([f"{score:.2f}" for score in last_5])
+    
+    cursor.close()
+    
+    time.sleep(1)
+    
+    choice = input("Would you like to return to the menu? (y/n): ")
+    match choice:
+        case "y":
+            return_to_admin_menu()
+        case "n":
+            net_score_menu()
+        case _:
+            print("Please enter either y or n")
     
 #Quick function for a clean exit
 def return_to_admin_menu():
