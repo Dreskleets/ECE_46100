@@ -34,18 +34,21 @@ def review_menu(AI_name):
     cursor = conn.cursor()
     match AI_name:
         case "Deepseek":
-            cursor.execute('SELECT * FROM Deepseek')
+            cursor.execute('SELECT review, ratings FROM Deepseek')
             reviews = cursor.fetchall()
+            print("\nReviews and Ratings:\n")
             for review in reviews:
                 print(review)
         case "MetaLlama":
-            cursor.execute('SELECT * FROM MetaLlama')
+            cursor.execute('SELECT review, ratings FROM MetaLlama')
             reviews = cursor.fetchall()
+            print("\nReviews and Ratings:\n")
             for review in reviews:
                 print(review)
         case "MistralAI":
-            cursor.execute('SELECT * FROM MistralAI')
+            cursor.execute('SELECT review, ratings FROM MistralAI')
             reviews = cursor.fetchall()
+            print("\nReviews and Ratings:\n")
             for review in reviews:
                 print(review)
     conn.close()

@@ -1,4 +1,4 @@
-import huggingface, Reviews
+import Huggingface, Reviews, Admin
 import sqlite3, os
 
 
@@ -16,7 +16,7 @@ def menu():
     print("Welcome to the ACME AI Database and Chat System!\nWhat would you like to do today?\n\n")
     print("1. Chat with models\n"
         "2. View model reviews\n"
-        "3. View performance data\n"
+        "3. Admin Access\n"
         "4. Exit")
     
     choice = input("Enter your choice (1-4): ")
@@ -29,7 +29,7 @@ def menu():
             Reviews.main()
             pass
         case "3":
-            #Performance main function goes here?
+            Admin.admin_access()
             pass
         case "4":
             print("Exiting the program. Goodbye!")
