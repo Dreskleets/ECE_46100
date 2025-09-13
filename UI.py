@@ -11,7 +11,6 @@ import sqlite3, os
 #2.) Chat (HF)
 #3.) Performance (Testing / Runtime)
 
-#Hugging Face Menu (2)
 def menu():
     print("Welcome to the ACME AI Database and Chat System!\nWhat would you like to do today?\n\n")
     print("1. Chat with models\n"
@@ -23,7 +22,7 @@ def menu():
 
     match choice:
         case "1": 
-            huggingface.huggingface_main()
+            Huggingface.huggingface_main()
             pass
         case "2":
             Reviews.main()
