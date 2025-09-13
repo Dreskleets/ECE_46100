@@ -43,6 +43,7 @@ def chat_with_model(selected_model, client):
     # Ask user for review
     review_question = input("Would you like to leave a review for this model? (y/n): ")
     if review_question.strip().lower() == 'y':
+        #Need to do a string vs number check otherwise it shows up in database
         ratings = input("Please rate the model from 1 to 10: \n")
         review = input("Please enter a review: \n")
         print("Thank you for your review!\n")

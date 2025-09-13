@@ -31,7 +31,7 @@
 
 #Use a net score to validate these metrics into a single metric.
 
-import UI, time, sqlite3
+import UI, time, sqlite3, os
 
 def admin_access():
     print("Welcome to the Admin Menu:")
@@ -145,23 +145,117 @@ def open_source_review():
             print("Invalid Response. Please enter either y or n")
             return(False)
 def ai_performance_menu():
-    #Delete function contents when create actual functions
-    #Want to have a quick summary of the AI and what the average runtime from our database is
-    return_to_admin_menu()
+    conn = sqlite3.connect('review_data.db')
+    cursor = conn.cursor()
     
-def lines_of_code_report():
-    #Full Report of lines of code for all files and a total LOC
-    #Delete function contents when create actual functions
-    return_to_admin_menu()
+    cursor.execute("SELECT AVG(avg_run) FROM DeepSeek")
+    deepseek_avg_run = cursor.fetchone()[0]
+    cursor.execute("SELECT avg_run FROM DeepSeek ORDER BY id DESC LIMIT 5")
+    deepseek_last_5 = [row[0] for row in cursor.fetchall()]
+    
+    cursor.execute("SELECT AVG(avg_run) FROM MetaLlama")
+    metallama_avg_run = cursor.fetchone()[0]
+    cursor.execute("SELECT avg_run FROM MetaLlama ORDER BY id DESC LIMIT 5")
+    metallama_last_5 = [row[0] for row in cursor.fetchall()]
+    
+    cursor.execute("SELECT AVG(avg_run) FROM MistralAI")
+    mistral_avg_run = cursor.fetchone()[0]
+    cursor.execute("SELECT avg_run FROM MistralAI ORDER BY id DESC LIMIT 5")
+    mistral_last_5 = [row[0] for row in cursor.fetchall()]
+    
+    print("Performance Statistics")
+    print("---------------------")
+    print("  Average Runtimes")
+    print("  DeepSeek || MetaLlama || MistralAi")
+    print("   ",f"{deepseek_avg_run:.2f}","      ", f"{metallama_avg_run:.2f}","       ", f"{mistral_avg_run:.2f}")
+    print("---------------------")
+    print("  Last 5 Runtimes ")
+    print("  DeepSeek  ")
+    print([f"{score:.2f}" for score in deepseek_last_5])
+    print("  MetaLlama  ")
+    print([f"{score:.2f}" for score in metallama_last_5])
+    print("  Mistral  ")
+    print([f"{score:.2f}" for score in mistral_last_5])
+    print("---------------------")
+    cursor.close()
+    
+    time.sleep(1)
+    
+    choice = input("Would you like to return to the menu? (y/n): ")
+    match choice:
+        case "y":
+            return_to_admin_menu()
+        case "n":
+            ai_performance_menu()
+        case _:
+            print("Please enter either y or n")
+    
+def lines_of_code_report(directory = "."):
+    total_lines = 0
+    
+    print(" Python Files Total Lines of Code")
+    print("----------------------------------")
+    #Used Chat GPT Prompt "How would i create a function for say an admin menu that will be able to tell me the 
+    #total lines of code without comments or blank lines through each file and the whole file combined for python files?"
+    
+    for root, _, files in os.walk(directory):
+        for file in files:
+            if file.endswith(".py"):
+                file_path = os.path.join(root, file)
+
+                with open(file_path, "r", encoding="utf-8") as f:
+                    line_count = 0
+                    for line in f:
+                        stripped = line.strip()
+                        # Skip empty lines and comment lines
+                        if stripped and not stripped.startswith("#"):
+                            line_count += 1
+
+                total_lines += line_count
+                print(f"{file_path}: {line_count} lines")
+
+    print("-" * 50)
+    print(f"TOTAL: {total_lines} lines across all Python files")
+    
+    time.sleep(1)
+    
+    choice = input("Would you like to return to the menu? (y/n): ")
+    match choice:
+        case "y":
+            return_to_admin_menu()
+        case "n":
+            lines_of_code_report()
+        case _:
+            print("Please enter either y or n")
     
 def licenses_menu():
-    #License database and information menu
-    #Delete function contents when create actual functions
-    return_to_admin_menu()
+    conn = sqlite3.connect('review_data.db')
+    cursor = conn.cursor()
+    
+    cursor.execute("SELECT license_name FROM Licenses ORDER BY id")
+    license_list = [row[0] for row in cursor.fetchall()]
+    
+    print("    License Menu     ")
+    print("---------------------")
+    for license_list in license_list:
+        print(license_list)
+    print("---------------------")
+    
+    cursor.close()
+    
+    time.sleep(1)
+    
+    choice = input("Would you like to return to the menu? (y/n): ")
+    match choice:
+        case "y":
+            return_to_admin_menu()
+        case "n":
+            net_score_menu()
+        case _:
+            print("Please enter either y or n")
+    
     
 def net_score_menu():
-    #Similar to AI performance menu except with the average net score for each one
-    #Delete function contents when create actual functions
     
     conn = sqlite3.connect('review_data.db')
     cursor = conn.cursor()
@@ -174,9 +268,11 @@ def net_score_menu():
     print("Net Score Statistics")
     print("---------------------")
     print("  Net Score Average")
-    print(f"{net_score_avg:.2f}")
+    print("       ",f"{net_score_avg:.2f}")
+    print("---------------------")
     print("  Last 5 Net Scores")
     print([f"{score:.2f}" for score in last_5])
+    print("---------------------")
     
     cursor.close()
     
