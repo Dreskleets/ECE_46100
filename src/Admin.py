@@ -31,7 +31,8 @@
 
 #Use a net score to validate these metrics into a single metric.
 
-import UI, time, sqlite3, os
+from src import UI
+import time, sqlite3, os
 
 def admin_access():
     print("Welcome to the Admin Menu:")

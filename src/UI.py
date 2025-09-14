@@ -1,4 +1,4 @@
-import Huggingface, Reviews, Admin
+from src import Huggingface, Reviews, Admin
 import sqlite3, os
 
 
