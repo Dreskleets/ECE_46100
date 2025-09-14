@@ -54,6 +54,9 @@ def admin_access():
             print("Invalid choice. Please enter either y or n")
             return(True)
         
+        
+#Probably need to adjust these metrics to be specific to each model chosen. Not sure on requirements though.
+#Also need to add latency to the performance metrics somehow? Not sure on those requirements either yet.
 def admin_menu():
     print("Hi welcome to the Admin Menu\n")
     print("What would you like to access today?\n"
