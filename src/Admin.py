@@ -31,6 +31,8 @@
 
 #Use a net score to validate these metrics into a single metric.
 
+#Going to eventually strip all backend UI functions and implement Flask and html as the Frontend UI.
+
 from src import UI
 import time, sqlite3, os
 
@@ -49,8 +51,6 @@ def admin_access():
                     admin_menu()
         case "n" | "N":
             UI.menu()
-        case "q":
-            print("Exiting the program. Goodbye")
         case _:
             print("Invalid choice. Please enter either y or n")
             return(True)
