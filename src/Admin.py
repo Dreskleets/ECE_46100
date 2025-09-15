@@ -33,7 +33,7 @@
 
 #Going to eventually strip all backend UI functions and implement Flask and html as the Frontend UI.
 
-from src import UI
+import UI
 import time, sqlite3, os
 
 def admin_access():
@@ -152,9 +152,9 @@ def ai_performance_menu():
     conn = sqlite3.connect('review_data.db')
     cursor = conn.cursor()
     
-    cursor.execute("SELECT AVG(avg_run) FROM DeepSeek")
+    cursor.execute("SELECT AVG(avg_run) FROM Deepseek")
     deepseek_avg_run = cursor.fetchone()[0]
-    cursor.execute("SELECT avg_run FROM DeepSeek ORDER BY id DESC LIMIT 5")
+    cursor.execute("SELECT avg_run FROM Deepseek ORDER BY id DESC LIMIT 5")
     deepseek_last_5 = [row[0] for row in cursor.fetchall()]
     
     cursor.execute("SELECT AVG(avg_run) FROM MetaLlama")
