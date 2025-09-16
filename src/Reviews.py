@@ -5,7 +5,8 @@ def main_menu():
     print("1. Deepseek\n"
           "2. MetaLlama\n"
           "3. MistralAI\n"
-          "4. Exit")
+          "4. Enter link to model"
+          "5. Exit")
     
     choice = input("Enter your choice (1-4): ")
 
@@ -20,6 +21,9 @@ def main_menu():
             AI_name = "MistralAI"
             review_menu(AI_name)
         case "4":
+            AI_name = input("Enter the model link (ex. deepseek-ai/DeepSeek-V3-0324): ")
+            review_menu(AI_name)
+        case "5":
             print("Exiting the program. Goodbye!")
             return(False)
         case _:
@@ -32,25 +36,36 @@ def review_menu(AI_name):
 
     conn = sqlite3.connect('review_data.db')
     cursor = conn.cursor()
-    match AI_name:
-        case "Deepseek":
+    
+    if AI_name == "Deepseek":
             cursor.execute('SELECT review, ratings FROM Deepseek')
             reviews = cursor.fetchall()
             print("\nReviews and Ratings:\n")
             for review in reviews:
                 print(review)
-        case "MetaLlama":
+    if AI_name == "MetaLlama":
             cursor.execute('SELECT review, ratings FROM MetaLlama')
             reviews = cursor.fetchall()
             print("\nReviews and Ratings:\n")
             for review in reviews:
                 print(review)
-        case "MistralAI":
+    if AI_name == "MistralAI":
             cursor.execute('SELECT review, ratings FROM MistralAI')
             reviews = cursor.fetchall()
             print("\nReviews and Ratings:\n")
             for review in reviews:
                 print(review)
+    else:
+        try:
+            table_name = AI_name
+            cursor.execute(f'SELECT review, ratings FROM {table_name}')
+            reviews = cursor.fetchall()
+            print("\nReviews and Ratings:\n")
+            for review in reviews:
+                print(review)
+        except sqlite3.OperationalError:
+            print("No reviews found for this model or invalid model link.")
+              
     conn.close()
     input("Press enter to return to menu")
 

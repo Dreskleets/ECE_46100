@@ -59,8 +59,8 @@ def chat_with_model(selected_model, client):
 
     
     # Inserts data into the database based on model selected
-    match selected_model:
-        case "deepseek-ai/DeepSeek-V3-0324":
+    
+    if selected_model == "deepseek-ai/DeepSeek-V3-0324":
             cursor.execute('''
                 INSERT INTO Deepseek (ratings, review, avg_run)
                 VALUES (?, ?, ?)
@@ -70,7 +70,7 @@ def chat_with_model(selected_model, client):
             conn.commit()
             conn.close()
             pass
-        case "meta-llama/Meta-Llama-3-8B-Instruct":
+    if selected_model == "meta-llama/Meta-Llama-3-8B-Instruct":
             cursor.execute('''
                 INSERT INTO MetaLlama (ratings, review, avg_run)
                 VALUES (?, ?, ?)
@@ -80,7 +80,7 @@ def chat_with_model(selected_model, client):
             conn.commit()
             conn.close()
             pass
-        case "mistralai/Mistral-7B-Instruct-v0.2":
+    if selected_model == "mistralai/Mistral-7B-Instruct-v0.2":
             cursor.execute('''
                 INSERT INTO MistralAI (ratings, review, avg_run)
                 VALUES (?, ?, ?)
@@ -90,6 +90,30 @@ def chat_with_model(selected_model, client):
             conn.commit()
             conn.close()
             pass
+    else:
+        try:
+            cursor.execute(f'''
+                INSERT INTO {selected_model} (ratings, review, avg_run)
+                VALUES (?, ?, ?)
+            ''', (ratings, review, avg_run))
+            conn.commit()
+            conn.close()
+        except sqlite3.OperationalError:
+            cursor.execute(f'''
+                CREATE TABLE IF NOT EXISTS "{selected_model}" (
+                    "ID" INTEGER,
+                    "ratings" INTEGER,
+                    "review" TEXT,
+                    "avg_run" NUMERIC,
+                    PRIMARY KEY("ID")
+                )
+            ''')
+            cursor.execute(f'''
+                INSERT INTO "{selected_model}" (ratings, review, avg_run)
+                VALUES (?, ?, ?)
+            ''', (ratings, review, avg_run))
+            conn.commit()
+            conn.close()
 
 
 models = {
@@ -102,8 +126,17 @@ def select_model():
     print("\n\n\nSelect an AI model to use:")
     for key, model in models.items():
         print(f"{key}: {model}")
-    choice = input("Enter the number corresponding to your choice: ").strip()
+    choice = input("Enter the number corresponding to your choice or enter your own link (ex. deepseek-ai/DeepSeek-V3-0324): ").strip()
     if choice not in models:
+
+        try :
+            # Check if the model exists on Huggingface Hub
+            client = get_inference_client()
+            selected_model = choice
+            return selected_model
+        except Exception as e:
+            print(f"Error: Model Not Found. Please try again.\n")
+            return None
         return None
     selected_model = models[choice]
     print(f"\nYou selected: {selected_model}")
