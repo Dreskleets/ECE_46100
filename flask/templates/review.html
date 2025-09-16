@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% block title %}Review{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-sm p-4">
+        <h3 class="mb-4">Help us improve the AI Database</h3>
+
+        <form action="{{ url_for('review') }}" method="POST">
+            
+        <!-- Ramp Up Time -->
+        <div class="mb-4">
+                <label class="form-label d-block">How was the ramp up time?</label>
+                <div class="d-flex align-items-center justify-content-center" style="gap: 20px;">
+                        <span class="text-muted small flex-shrink-0" style="min-width: 80px; text-align: right;">
+                        Very Difficult
+                        </span>
+                        <div class="rating-group">
+                        {% for i in range(1, 11) %}
+                                <input type="radio" class="rating-input" name="ramp" id="ramp_up_{{ i }}" value="{{ i }}" required>
+                                <label for="ramp_up_{{ i }}" class="rating-circle">{{ i }}</label>
+                        {% endfor %}
+                        </div>
+                        <span class="text-muted small flex-shrink-0" style="min-width: 80px; text-align: left;">
+                        Very Easy
+                        </span>
+                </div>
+        </div>
+
+        <!-- Bus Factor -->
+        <div class="mb-4">
+                <label class="form-label d-block">How resilient is the project team (Bus Factor)?</label>
+                <div class="d-flex align-items-center justify-content-center" style="gap: 20px;">
+                        <span class="text-muted small flex-shrink-0" style="min-width: 80px; text-align: right;">
+                        Low Resilience
+                        </span>
+                        <div class="rating-group">
+                        {% for i in range(1, 11) %}
+                                <input type="radio" class="rating-input" name="bus" id="bus_factor_{{ i }}" value="{{ i }}" required>
+                                <label for="bus_factor_{{ i }}" class="rating-circle">{{ i }}</label>
+                        {% endfor %}
+                        </div>
+                        <span class="text-muted small flex-shrink-0" style="min-width: 80px; text-align: left;">
+                        High Resilience
+                        </span>
+                </div>
+        </div>
+
+        <!-- License Compatibility -->
+        <div class="mb-4">
+                <label class="form-label d-block">How clear was the license compatibility?</label>
+                <div class="d-flex align-items-center justify-content-center" style="gap: 20px;">
+                        <span class="text-muted small flex-shrink-0" style="min-width: 80px; text-align: right;">
+                        Unclear
+                        </span>
+                        <div class="rating-group">
+                        {% for i in range(1, 11) %}
+                                <input type="radio" class="rating-input" name="license" id="license_compatibility_{{ i }}" value="{{ i }}" required>
+                                <label for="license_compatibility_{{ i }}" class="rating-circle">{{ i }}</label>
+                        {% endfor %}
+                        </div>
+                        <span class="text-muted small flex-shrink-0" style="min-width: 80px; text-align: left;">
+                        Very Clear
+                        </span>
+                </div>
+        </div>
+
+        <!-- Size Score -->
+        <div class="mb-4">
+                <label class="form-label d-block">How would you rate the size & portability?</label>
+                <div class="d-flex align-items-center justify-content-center" style="gap: 20px;">
+                        <span class="text-muted small flex-shrink-0" style="min-width: 80px; text-align: right;">
+                        Too Large
+                        </span>
+                        <div class="rating-group">
+                        {% for i in range(1, 11) %}
+                                <input type="radio" class="rating-input" name="size" id="size_{{ i }}" value="{{ i }}" required>
+                                <label for="size_{{ i }}" class="rating-circle">{{ i }}</label>
+                        {% endfor %}
+                        </div>
+                        <span class="text-muted small flex-shrink-0" style="min-width: 80px; text-align: left;">
+                        Compact
+                        </span>
+                </div>
+        </div>
+
+        <!-- Dataset Quality -->
+        <div class="mb-4">
+                <label class="form-label d-block">How would you rate dataset quality?</label>
+                <div class="d-flex align-items-center justify-content-center" style="gap: 20px;">
+                        <span class="text-muted small flex-shrink-0" style="min-width: 80px; text-align: right;">
+                        Poor
+                        </span>
+                        <div class="rating-group">
+                        {% for i in range(1, 11) %}
+                                <input type="radio" class="rating-input" name="data" id="dataset_quality_{{ i }}" value="{{ i }}" required>
+                                <label for="dataset_quality_{{ i }}" class="rating-circle">{{ i }}</label>
+                        {% endfor %}
+                        </div>
+                        <span class="text-muted small flex-shrink-0" style="min-width: 80px; text-align: left;">
+                        Excellent
+                        </span>
+                </div>
+        </div>
+
+        <!-- Code Quality -->
+        <div class="mb-4">
+                <label class="form-label d-block">How would you rate code quality?</label>
+                <div class="d-flex align-items-center justify-content-center" style="gap: 20px;">
+                        <span class="text-muted small flex-shrink-0" style="min-width: 80px; text-align: right;">
+                        Low
+                        </span>
+                        <div class="rating-group">
+                        {% for i in range(1, 11) %}
+                                <input type="radio" class="rating-input" name="code" id="code_quality_{{ i }}" value="{{ i }}" required>
+                                <label for="code_quality_{{ i }}" class="rating-circle">{{ i }}</label>
+                        {% endfor %}
+                        </div>
+                        <span class="text-muted small flex-shrink-0" style="min-width: 80px; text-align: left;">
+                        High
+                        </span>
+                </div>
+        </div>
+
+            <!-- Optional Comments -->
+            <div class="mb-4">
+                <label for="comments" class="form-label">Can you tell us more?</label>
+                <textarea class="form-control" name="comments" id="comments" rows="3" placeholder="Your feedback..."></textarea>
+            </div>
+
+            <!-- Buttons -->
+            <div class="d-flex justify-content-end">
+                <a href="{{ url_for('home') }}" class="btn btn-outline-secondary me-2">Cancel</a>
+                <button type="submit" class="btn btn-primary">Submit Review</button>
+            </div>
+
+        </form>
+    </div>
+</div>
+{% endblock %}
