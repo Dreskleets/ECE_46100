@@ -1,17 +1,22 @@
+#!/usr/bin/env python3
+#!/usr/bin/env bash
 #Run file for milestone 1
 
 import sys, os
 
 def install():
-    
-    print("Install")
+    # Install dependencies from requirements.txt
+    os.system(f"{sys.executable} -m pip install --break-system-packages -r {os.path.join(os.path.dirname(__file__), 'requirements.txt')}")
+    print("Installed all requirements!")
     
 def run_tests():
-    
+    # Run test suite
     print("Testing")
     
 def process_url_file():
-    
+    # Process URL file
+    # Absolute location of ASCII encoded newline-delimited set of URLs
+    # Model, Dataset, and Code URLs needed
     print("Url")
 
 def main():
