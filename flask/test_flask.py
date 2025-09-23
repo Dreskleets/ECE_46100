@@ -124,7 +124,10 @@ def browse():
     return render_template("browse.html", top_models=top_models, models=models)
 
 
-
+@app.route("/modelreviews")
+def modelreviews():
+    
+    return render_template("modelReviews.html")
 
 @app.route("/review", methods = ["GET", "POST"])
 def review():
