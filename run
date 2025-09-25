@@ -1,0 +1,4 @@
+#!/bin/bash
+# Wrapper script for run.py to make it executable as "./run"
+cd "$(dirname "$0")"
+python3 src/run.py "$@"
